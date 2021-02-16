@@ -1,3 +1,4 @@
+import './App.css'
 import Card from './Card'
 import { results } from './rickandmortyapi.json'
 
