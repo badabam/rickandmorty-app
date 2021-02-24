@@ -1,22 +1,24 @@
 import './App.css'
-import Card from './Card'
 import { useEffect, useState } from 'react'
-import Pagination from './Pagination'
+import Card from './Card'
 import getCharacters from '../services/getCharacters'
+import Pagination from './Pagination'
 
 function App() {
   const [characters, setCharacters] = useState([])
-  const [cachedCharacters, setCachedCharacters] = useState({})
+  const [cachedPages, setCachedPages] = useState({})
   const [totalPages, setTotalPages] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const url = 'https://rickandmortyapi.com/api/character?page=' + currentPage
 
   useEffect(() => {
-    if (!cachedCharacters[currentPage]) {
+    if (cachedPages[currentPage]) {
+      setCharacters(cachedPages[currentPage])
+    } else {
       getCharacters(url).then(data => {
         setCharacters(data.results)
-        setCachedCharacters({
-          ...cachedCharacters,
+        setCachedPages({
+          ...cachedPages,
           [currentPage]: data.results,
         })
         setTotalPages(data.info.pages)
@@ -24,18 +26,13 @@ function App() {
     }
   }, [url])
 
-  function handleClickBack() {
+  function showPreviousPage() {
     setCurrentPage(currentPage - 1)
-    if (cachedCharacters[currentPage - 1]) {
-      setCharacters(cachedCharacters[currentPage - 1])
-    }
+    setCharacters(cachedPages[currentPage - 1])
   }
 
-  function handleClickForward() {
+  function showNextPage() {
     setCurrentPage(currentPage + 1)
-    if (cachedCharacters[currentPage + 1]) {
-      setCharacters(cachedCharacters[currentPage + 1])
-    }
   }
 
   return (
@@ -43,11 +40,11 @@ function App() {
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onClickBack={handleClickBack}
-        onClickForward={handleClickForward}
+        onPrevious={showPreviousPage}
+        onNext={showNextPage}
       />
       {characters.map(
-        ({ name, species, image, id, gender, status, origin, location }) => (
+        ({ id, name, species, gender, image, status, origin, location }) => (
           <Card
             key={id}
             name={name}
