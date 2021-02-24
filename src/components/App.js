@@ -2,54 +2,63 @@ import './App.css'
 import Card from './Card'
 import { useEffect, useState } from 'react'
 import Pagination from './Pagination'
+import getCharacters from '../services/getCharacters'
 
 function App() {
   const [characters, setCharacters] = useState([])
+  const [cachedCharacters, setCachedCharacters] = useState({})
   const [totalPages, setTotalPages] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
+  const url = 'https://rickandmortyapi.com/api/character?page=' + currentPage
 
   useEffect(() => {
-    getAllCharacters()
-  }, [])
-
-  function getAllCharacters(url = 'https://rickandmortyapi.com/api/character') {
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        setCharacters(oldState => [...oldState, [...data.results]])
-        const nextUrl = data.info.next
+    if (!cachedCharacters[currentPage]) {
+      getCharacters(url).then(data => {
+        setCharacters(data.results)
+        setCachedCharacters({
+          ...cachedCharacters,
+          [currentPage]: data.results,
+        })
         setTotalPages(data.info.pages)
-        nextUrl && getAllCharacters(nextUrl)
       })
+    }
+  }, [url])
+
+  function handleClickBack() {
+    setCurrentPage(currentPage - 1)
+    if (cachedCharacters[currentPage - 1]) {
+      setCharacters(cachedCharacters[currentPage - 1])
+    }
   }
-  console.log(characters)
+
+  function handleClickForward() {
+    setCurrentPage(currentPage + 1)
+    if (cachedCharacters[currentPage + 1]) {
+      setCharacters(cachedCharacters[currentPage + 1])
+    }
+  }
+
   return (
     <div className="App">
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onClickBack={() => setCurrentPage(currentPage - 1)}
-        onClickForward={() => setCurrentPage(currentPage + 1)}
+        onClickBack={handleClickBack}
+        onClickForward={handleClickForward}
       />
-      {characters[currentPage - 1] ? (
-        characters[
-          currentPage - 1
-        ].map(
-          ({ name, species, image, id, gender, status, origin, location }) => (
-            <Card
-              key={id}
-              name={name}
-              species={species}
-              gender={gender}
-              image={image}
-              status={status}
-              origin={origin.name}
-              location={location.name}
-            />
-          )
+      {characters.map(
+        ({ name, species, image, id, gender, status, origin, location }) => (
+          <Card
+            key={id}
+            name={name}
+            species={species}
+            gender={gender}
+            image={image}
+            status={status}
+            origin={origin.name}
+            location={location.name}
+          />
         )
-      ) : (
-        <span>Loading...</span>
       )}
     </div>
   )
