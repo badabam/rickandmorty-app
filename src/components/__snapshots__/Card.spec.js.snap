@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Card should render a card component from props 1`] = `
+<section
+  class="Card"
+>
+  <h2>
+    👤
+     
+    Jane
+  </h2>
+  <img
+    alt=""
+    data-testid="card-image"
+    src="https://source.unsplash.com/300x300/?goat"
+  />
+  <button>
+    Show details
+  </button>
+  <dl
+    data-testid="card-details"
+    hidden=""
+  >
+    <dt>
+      Gender
+    </dt>
+    <dd>
+      Women
+    </dd>
+    <dt>
+      Status
+    </dt>
+    <dd>
+      alive
+    </dd>
+    <dt>
+      Origin
+    </dt>
+    <dd>
+      Earth
+    </dd>
+    <dt>
+      Location
+    </dt>
+    <dd>
+      Moon
+    </dd>
+  </dl>
+</section>
+`;

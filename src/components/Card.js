@@ -18,11 +18,11 @@ export default function Card({
       <h2>
         {icon} {name}
       </h2>
-      <img src={image} alt="" />
+      <img data-testid="card-image" src={image} alt="" />
       <button onClick={() => setAreDetailsVisible(!areDetailsVisible)}>
         {areDetailsVisible ? 'Hide details' : 'Show details'}
       </button>
-      <dl hidden={!areDetailsVisible}>
+      <dl data-testid="card-details" hidden={!areDetailsVisible}>
         <dt>Gender</dt>
         <dd>{gender}</dd>
         <dt>Status</dt>
