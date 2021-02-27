@@ -4,7 +4,7 @@ import Pagination from './Pagination'
 
 describe('Pagination', () => {
   it('should render a pagination component from props', () => {
-    render(<Pagination currentPage="5" totalPages="9" />)
+    render(<Pagination currentPage={5} totalPages={9} />)
 
     expect(screen.getByText('5/9')).toBeInTheDocument()
     expect(screen.getAllByRole('button', /←→/)).toHaveLength(2)
@@ -16,8 +16,8 @@ describe('Pagination', () => {
 
     render(
       <Pagination
-        currentPage="4"
-        totalPages="12"
+        currentPage={4}
+        totalPages={12}
         onNext={onNextCallback}
         onPrevious={onPreviousCallback}
       />
@@ -32,12 +32,12 @@ describe('Pagination', () => {
   })
 
   it('should disable the previous button if the current page equals to one', () => {
-    render(<Pagination currentPage="1" totalPages="9" />)
+    render(<Pagination currentPage={1} totalPages={9} />)
 
     expect(screen.getByRole('button', { name: '←' })).toBeDisabled()
   })
   it('should disable the next button if the current page equals the total amount of pages', () => {
-    render(<Pagination currentPage="9" totalPages="9" />)
+    render(<Pagination currentPage={9} totalPages={9} />)
 
     expect(screen.getByRole('button', { name: '→' })).toBeDisabled()
   })
